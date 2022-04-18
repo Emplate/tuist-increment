@@ -7,6 +7,7 @@ struct MainCommand: ParsableCommand {
         abstract: "A plugin that increments the build and version numbers",
         subcommands: [
             IncrementBuild.self,
+            IncrementVersion.self,
         ],
         defaultSubcommand: IncrementBuild.self
     )
