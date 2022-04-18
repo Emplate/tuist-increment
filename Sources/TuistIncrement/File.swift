@@ -31,10 +31,6 @@ final class File {
         return buildNumber
     }
 
-    public func updateBuild(_ build: Int) throws {
-        try updateValue(key: .build, value: String(build))
-    }
-
     public func readVersion() throws -> Version {
         let values = try readValue(from: .version).split(separator: ".")
 
@@ -43,6 +39,14 @@ final class File {
         }
 
         return Version(year: year, number: number)
+    }
+
+    public func updateBuild(_ build: Int) throws {
+        try updateValue(key: .build, value: String(build))
+    }
+
+    public func updateVersion(_ version: Version) throws {
+        try updateValue(key: .version, value: "\(version.year).\(version.number)")
     }
 
     public func readValue(from key: FileKey) throws -> String {

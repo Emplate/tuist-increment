@@ -24,7 +24,7 @@ extension MainCommand {
                 version.number = 1
             }
 
-            try file.updateValue(key: .version, value: "\(version.year).\(version.number)")
+            try file.updateVersion(version)
         }
     }
 }
