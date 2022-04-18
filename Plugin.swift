@@ -1,3 +1,3 @@
 import ProjectDescription
 
-let plugin = Plugin(name: "VersionIncrementer")
+let plugin = Plugin(name: "VersionIncrement")
