@@ -11,13 +11,9 @@ extension MainCommand {
         func run() throws {
             let file = File(path: "EmplateConsumer/InfoPlist.h")
 
-            let buildNumber = try Int(file.readValue(from: .build))
+            let buildNumber = try file.readBuild()
 
-            guard let buildNumber = buildNumber else {
-                fatalError("Could not unwrap the build number as an integer")
-            }
-
-            try file.updateValue(key: .build, value: "\(buildNumber + 1)")
+            try file.updateBuild(buildNumber + 1)
         }
     }
 }

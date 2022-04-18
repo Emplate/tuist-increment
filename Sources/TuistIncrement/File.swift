@@ -1,9 +1,9 @@
 import Foundation
 
-class File {
+final class File {
     private let path: String
 
-    init(path: String) {
+    public init(path: String) {
         self.path = path
     }
 
@@ -15,6 +15,34 @@ class File {
     enum FileError: Error {
         case couldNotReadContent(URL)
         case couldNotFindValueForKey(FileKey)
+        case couldNotReadBuildNumber
+        case couldNotReadVersion
+    }
+
+    public struct Version {
+        var year: Int
+        var number: Int
+    }
+
+    public func readBuild() throws -> Int {
+        guard let buildNumber = try Int(readValue(from: .build)) else {
+            throw FileError.couldNotReadBuildNumber
+        }
+        return buildNumber
+    }
+
+    public func updateBuild(_ build: Int) throws {
+        try updateValue(key: .build, value: String(build))
+    }
+
+    public func readVersion() throws -> Version {
+        let values = try readValue(from: .version).split(separator: ".")
+
+        guard let year = Int(values[0]), let number = Int(values[1]) else {
+            throw FileError.couldNotReadVersion
+        }
+
+        return Version(year: year, number: number)
     }
 
     public func readValue(from key: FileKey) throws -> String {

@@ -11,25 +11,20 @@ extension MainCommand {
         func run() throws {
             let file = File(path: "EmplateConsumer/InfoPlist.h")
 
-            let values = try file.readValue(from: .version).split(separator: ".")
-
-            guard let versionYear = Int(values[0]),
-                  var versionNumber = Int(values[1])
-            else {
-                fatalError("Could not unwrap the version numbers as integers")
-            }
+            var version = try file.readVersion()
 
             let currentYear = Calendar.current.component(.year, from: Date())
 
-            if versionYear == currentYear {
+            if version.year == currentYear {
                 // Increment the number if the year hasn't changed
-                versionNumber += 1
+                version.number += 1
             } else {
-                // Reset to version 1 if the year has changed
-                versionNumber = 1
+                // Reset to current year and version 1 if the year has changed
+                version.year = currentYear
+                version.number = 1
             }
 
-            try file.updateValue(key: .version, value: "\(currentYear).\(versionNumber)")
+            try file.updateValue(key: .version, value: "\(version.year).\(version.number)")
         }
     }
 }
