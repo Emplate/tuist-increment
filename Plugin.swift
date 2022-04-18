@@ -1,3 +1,3 @@
 import ProjectDescription
 
-let plugin = Plugin(name: "tuist-plugin-increment")
+let plugin = Plugin(name: "VersionIncrementer")
