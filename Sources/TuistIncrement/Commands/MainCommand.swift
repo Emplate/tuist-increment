@@ -4,12 +4,11 @@ import ArgumentParser
 @main
 struct MainCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
-        commandName: "plugin-increment",
+        commandName: "increment",
         abstract: "A plugin that increments the build and version numbers",
         subcommands: [
             IncrementBuild.self,
             IncrementVersion.self,
-        ],
-        defaultSubcommand: IncrementBuild.self
+        ]
     )
 }
