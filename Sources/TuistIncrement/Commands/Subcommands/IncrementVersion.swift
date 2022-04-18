@@ -9,8 +9,9 @@ extension MainCommand {
         )
 
         func run() throws {
-            let key = "APP_VERSION"
-            let values = readValue(from: key).split(separator: ".")
+            let file = File(path: "EmplateConsumer/InfoPlist.h")
+
+            let values = try file.readValue(from: .version).split(separator: ".")
 
             guard let versionYear = Int(values[0]),
                   var versionNumber = Int(values[1])
@@ -28,7 +29,7 @@ extension MainCommand {
                 versionNumber = 1
             }
 
-            updateValue(key: key, value: "\(currentYear).\(versionNumber)")
+            try file.updateValue(key: .version, value: "\(currentYear).\(versionNumber)")
         }
     }
 }
