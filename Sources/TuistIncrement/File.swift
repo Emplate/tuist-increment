@@ -7,14 +7,9 @@ final class File {
         self.path = path
     }
 
-    enum FileKey: String {
-        case version = "APP_VERSION"
-        case build = "APP_BUILD"
-    }
-
-    enum FileError: Error {
+    public enum FileError: Error {
         case couldNotReadContent(URL)
-        case couldNotFindValueForKey(FileKey)
+        case couldNotFindValueForKey(String)
         case couldNotReadBuildNumber
         case couldNotReadVersion
     }
@@ -22,6 +17,10 @@ final class File {
     public struct Version {
         var year: Int
         var number: Int
+
+        var name: String {
+            "\(year).\(number)"
+        }
     }
 
     public func readBuild() throws -> Int {
@@ -46,24 +45,24 @@ final class File {
     }
 
     public func updateVersion(_ version: Version) throws {
-        try updateValue(key: .version, value: "\(version.year).\(version.number)")
+        try updateValue(key: .version, value: version.name)
     }
 
-    public func readValue(from key: FileKey) throws -> String {
-        guard let line = try lines().first(where: { $0.starts(with: "#define \(key.rawValue)") }),
+    private func readValue(from key: Key) throws -> String {
+        guard let line = try lines().first(where: { $0.starts(with: key.linePrefix) }),
               let value = line.split(separator: " ").last
         else {
-            throw FileError.couldNotFindValueForKey(key)
+            throw FileError.couldNotFindValueForKey(key.rawValue)
         }
 
         return String(value)
     }
 
-    public func updateValue(key: FileKey, value: String) throws {
+    private func updateValue(key: Key, value: String) throws {
         let content = try lines()
             .map { line -> String in
                 // Skip unrelated lines
-                guard line.starts(with: "#define \(key.rawValue)") else {
+                guard line.starts(with: key.linePrefix) else {
                     return String(line)
                 }
 
@@ -99,5 +98,14 @@ final class File {
         return content
             .split(separator: "\n")
             .map { String($0) }
+    }
+
+    private enum Key: String {
+        case version = "APP_VERSION"
+        case build = "APP_BUILD"
+
+        var linePrefix: String {
+            "#define \(rawValue)"
+        }
     }
 }
