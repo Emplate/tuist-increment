@@ -14,8 +14,8 @@ public extension SettingsDictionary {
     }
 }
 
-public extension Dictionary where Key == String, Value == ProjectDescription.InfoPlist.Value {
-    var withVersionPlaceholders: [String: ProjectDescription.InfoPlist.Value] {
+public extension Dictionary where Key == String, Value == ProjectDescription.Plist.Value {
+    var withVersionPlaceholders: [String: ProjectDescription.Plist.Value] {
         merging([
             "CFBundleShortVersionString": "APP_VERSION",
             "CFBundleVersion": "APP_BUILD",
